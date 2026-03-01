@@ -129,50 +129,85 @@ def plot_multiclass_roc_curve(y_true, y_scores, classes=None, average='macro', t
     - per_class_auc: dict with AUC per class
     """
     if classes is None:
-        classes = sorted(set(y_true))
+        classes = sorted(np.unique(y_true))
+
     n_classes = len(classes)
-    
-    # Binarize the true labels for one-vs-rest
+
+    # ==========================
+    # 🔵 CASO BINARIO
+    # ==========================
+    if n_classes == 2:
+
+        # Probabilidad de la clase positiva
+        if y_scores.ndim > 1:
+            y_score_pos = y_scores[:, 1]
+        else:
+            y_score_pos = y_scores
+
+        fpr, tpr, _ = roc_curve(y_true, y_score_pos)
+        roc_auc = auc(fpr, tpr)
+
+        plt.figure(figsize=(7, 5))
+        plt.plot(fpr, tpr, lw=2, label=f"AUC = {roc_auc:.4f}")
+        plt.plot([0, 1], [0, 1], 'k--', lw=2, label="Random")
+
+        plt.xlim([0.0, 1.0])
+        plt.ylim([0.0, 1.05])
+        plt.xlabel("False Positive Rate")
+        plt.ylabel("True Positive Rate")
+        plt.title(title + " (Binary)")
+        plt.legend(loc="lower right")
+        plt.grid(True)
+        plt.show()
+
+        roc_auc_per_class = {classes[1]: roc_auc}
+
+        return roc_auc, roc_auc, roc_auc_per_class
+
+    # ==========================
+    # 🔴 CASO MULTICLASE
+    # ==========================
+
     y_true_bin = label_binarize(y_true, classes=classes)
-    
-    # Compute ROC curve and AUC for each class
+
     fpr = dict()
     tpr = dict()
     roc_auc_per_class = dict()
-    
+
     for i, cls in enumerate(classes):
         fpr[i], tpr[i], _ = roc_curve(y_true_bin[:, i], y_scores[:, i])
         roc_auc_per_class[cls] = auc(fpr[i], tpr[i])
-    
-    # Compute micro-average ROC curve and AUC
-    fpr_micro, tpr_micro, _ = roc_curve(y_true_bin.ravel(), y_scores.ravel())
+
+    # Micro-average
+    fpr_micro, tpr_micro, _ = roc_curve(
+        y_true_bin.ravel(),
+        y_scores.ravel()
+    )
     roc_auc_micro = auc(fpr_micro, tpr_micro)
-    
-    # Compute macro-average AUC (simple mean of per-class AUCs)
+
+    # Macro-average
     roc_auc_macro = np.mean(list(roc_auc_per_class.values()))
-    
-    # Plot all ROC curves
+
+    # Plot
     plt.figure(figsize=(8, 6))
     colors = plt.cm.tab10(np.linspace(0, 1, n_classes))
-    
+
     for i, cls in enumerate(classes):
-        plt.plot(fpr[i], tpr[i], color=colors[i], lw=2,
-                 label=f'Class {cls} (AUC = {roc_auc_per_class[cls]:.2f})')
-    
-    # Plot micro-average
-    plt.plot(fpr_micro, tpr_micro, color='deeppink', linestyle=':', lw=4,
-             label=f'Micro-average (AUC = {roc_auc_micro:.2f})')
-    
-    # Plot diagonal line for random classifier
-    plt.plot([0, 1], [0, 1], 'k--', lw=2, label='Random')
-    
+        plt.plot(fpr[i], tpr[i], lw=2,
+                 label=f"Class {cls} (AUC = {roc_auc_per_class[cls]:.2f})")
+
+    plt.plot(fpr_micro, tpr_micro, linestyle=':',
+             lw=3, label=f"Micro-average (AUC = {roc_auc_micro:.2f})")
+
+    plt.plot([0, 1], [0, 1], 'k--', lw=2, label="Random")
+
     plt.xlim([0.0, 1.0])
     plt.ylim([0.0, 1.05])
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
-    plt.title(title)
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.title(title + " (Multiclass)")
     plt.legend(loc="lower right")
     plt.grid(True)
     plt.show()
-    
+
     return roc_auc_macro, roc_auc_micro, roc_auc_per_class

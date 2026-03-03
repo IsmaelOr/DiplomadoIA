@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.feature_selection import f_classif
 from sklearn.preprocessing import LabelEncoder
+from pandas.api.types import is_numeric_dtype
 
 def anova_feature_selection(X, y, k=None):
     """
@@ -22,7 +23,7 @@ def anova_feature_selection(X, y, k=None):
     if isinstance(y, pd.Series):
         y = y.values
     # Codificar etiquetas si son categóricas
-    if not np.issubdtype(y.dtype, np.number):
+    if not is_numeric_dtype(y):
         le = LabelEncoder()
         y = le.fit_transform(y)
     

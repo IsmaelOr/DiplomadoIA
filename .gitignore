@@ -1,0 +1,27 @@
+# Entornos virtuales
+.venv/
+venv/
+env/
+
+# Configuración IDE
+.vscode/
+
+# Archivos Python compilados
+__pycache__/
+*.pyc
+
+# Ignorar modelos serializados
+*.pkl
+
+# Opcional: otros formatos comunes
+*.joblib
+*.h5
+*.pt
+*.sav
+
+# Carpetas típicas
+__pycache__/
+.ipynb_checkpoints/
+
+# Jupyter
+.ipynb_checkpoints/

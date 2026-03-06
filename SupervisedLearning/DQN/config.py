@@ -5,7 +5,7 @@ from dataclasses import dataclass
 class Config:
     env_id: str = "ALE/Asteroids-v5" # gym.make("ALE/NombreDelJuego-v5", render_mode="human") para juegos de Atari
     seed: int = 666
-    render: bool = True
+    render: bool = False
 
     # Entrenamiento
     max_episodes: int = 100
@@ -34,7 +34,7 @@ class Config:
     atari_lr: float = 1e-4
     atari_train_freq: int = 4
     atari_target_update_freq: int = 10_000
-    atari_max_steps_total: int = 500_000
+    atari_max_steps_total: int = 10_000
 
     # Terminar antes si se "resuelve"
     solved_avg_reward: float = 475.0

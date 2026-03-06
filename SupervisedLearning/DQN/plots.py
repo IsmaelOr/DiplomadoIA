@@ -9,13 +9,13 @@ def moving_average(x, w=50):
     return np.convolve(x, np.ones(w) / w, mode="valid")
 
 
-def plot_training(episode_rewards, episode_epsilons, losses):
+def plot_training(episode_rewards, episode_epsilons, losses, title_prefix="DQN"):
     # 1) Rewards por episodio + media móvil
     plt.figure()
     plt.plot(episode_rewards, label="Reward por episodio")
     ma = moving_average(episode_rewards, w=50)
     plt.plot(range(len(episode_rewards) - len(ma) + 1, len(episode_rewards) + 1), ma, label="Media móvil (50)")
-    plt.title("Entrenamiento DQN - CartPole: Recompensa")
+    plt.title(f"Entrenamiento {title_prefix}: Recompensa")
     plt.xlabel("Episodio")
     plt.ylabel("Reward")
     plt.legend()
@@ -24,7 +24,7 @@ def plot_training(episode_rewards, episode_epsilons, losses):
     # 2) Epsilon por episodio
     plt.figure()
     plt.plot(episode_epsilons)
-    plt.title("Exploración (epsilon) por episodio")
+    plt.title(f"{title_prefix} - Exploración (epsilon) por episodio")
     plt.xlabel("Episodio")
     plt.ylabel("Epsilon")
     plt.grid(True)
@@ -35,7 +35,7 @@ def plot_training(episode_rewards, episode_epsilons, losses):
         plt.plot(losses, label="Loss (actualizaciones)")
         ma_l = moving_average(losses, w=200)
         plt.plot(range(len(losses) - len(ma_l) + 1, len(losses) + 1), ma_l, label="Media móvil (200)")
-        plt.title("DQN Loss durante el entrenamiento")
+        plt.title(f"{title_prefix} - Loss durante el entrenamiento")
         plt.xlabel("Actualización")
         plt.ylabel("Loss")
         plt.legend()

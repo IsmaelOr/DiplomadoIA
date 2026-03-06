@@ -209,6 +209,7 @@ def train_cartpole():
 def train_atari():
     set_seed(cfg.seed)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    torch.backends.cudnn.benchmark = True
     print(f"[Atari] device: {device}")
 
     env = make_env(cfg.env_id, cfg.seed, cfg.render)

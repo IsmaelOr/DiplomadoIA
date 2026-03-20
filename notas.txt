@@ -1,0 +1,5 @@
+Para ejecutar comandos de Linux desde un .ipynb desde VisualStudioCode en Windows
+
+Se puede utilizar el siguiente comando indicando la ubicación de la terminal de Linux
+
+%%script "C:\Program Files\Git\bin\bash.exe"

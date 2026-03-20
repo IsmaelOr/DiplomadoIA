@@ -25,3 +25,7 @@ __pycache__/
 
 # Jupyter
 .ipynb_checkpoints/
+
+#Descargas de imagenes, datos, etc
+PetImages/
+*.zip

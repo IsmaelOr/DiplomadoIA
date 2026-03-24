@@ -29,3 +29,9 @@ __pycache__/
 #Descargas de imagenes, datos, etc
 PetImages/
 *.zip
+
+#Resultados de ejecución de modelos
+runs/
+
+#Descarga de datasets de roboflow
+Detección-de-personajes-SMB-1/
